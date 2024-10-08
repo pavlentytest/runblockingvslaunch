@@ -1,19 +1,22 @@
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-// https://www.dhiwise.com/post/kotlin-runblocking-vs-launch-a-guide-to-optimal-coroutine
 
-fun main2() = runBlocking {
-    println("Start of runBlocking")
-    delay(5000) // Simulate some work
-    println("End of runBlocking")
-}
-fun main() = runBlocking {
+fun main() = runBlocking { // this: CoroutineScope
     launch {
-        println("Start of launch")
-        delay(5000) // Simulate background work
-        println("End of launch")
+        delay(2000)
+        println("Task from runBlocking")
     }
-    println("Code outside launch")
+
+    coroutineScope { // Создание coroutine scope
+        launch {
+            delay(5000)
+            println("Task from nested launch")
+        }
+        println("Task from coroutine scope") // Эта строка будет выведена перед вложенным launch
+    }
+
+    println("Coroutine scope is over") // Эта строка не будет выведена пока не выполнится вложенный launch
 }
